@@ -24,37 +24,40 @@ describe "Static pages" do
   describe "Help page" do
       before { visit help_path }
       let(:heading)    { 'Help' }
-      let(:page_title) { '' }
+      let(:page_title) { 'Help' }
+    it_should_behave_like "all static pages"
 
   end
 
   describe "About page" do
       before { visit about_path }
     let(:heading)    { 'About us' }
-    let(:page_title) { '' }
+    let(:page_title) { 'About us' }
+    it_should_behave_like "all static pages"
 
   end
   
   describe "Contact page" do
       before { visit contact_path }
       let(:heading)    { 'Contact' }
-      let(:page_title) { '' }
+      let(:page_title) { 'Contact' }
+    it_should_behave_like "all static pages"
 
   end
 
   it "should have the right links on the layout" do
     visit root_path
     click_link "About"
-    page.should have_selector 'title', text: full_title('About Us')
+    page.should have_selector 'title', text: full_title('About us')
     click_link "Help"
-    page.should # fill in
+    page.should have_selector 'title', text: full_title('Help')
     click_link "Contact"
-    page.should # fill in
+    page.should have_selector 'title', text: full_title('Contact')
     click_link "Home"
     click_link "Sign up now!"
-    page.should # fill in
+    page.should have_selector 'title', text: full_title('Sign up')
     click_link "sample app"
-    page.should # fill in
+    page.should have_selector 'title', text: full_title('')
   end
 
 end
