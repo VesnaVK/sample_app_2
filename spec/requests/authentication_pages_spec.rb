@@ -43,7 +43,13 @@ describe "Authentication" do
       describe "followed by signout" do
         before { click_link "Sign out" }
         it { should have_link('Sign in') }
-      end
+        # added for Chapter 9 Exercise 3, Lab 10a
+        it { should_not have_link('Users',  href: users_path)}
+        it { should_not have_link('Profile',  href: users_path(user))}        
+        it { should_not have_link('Settings',  href: edit_user_path(user))}        
+        it { should_not have_link('Sign out',  href: signout_path)}        
+
+    end
     end # describe with valid information
   end # describe signin
 
@@ -96,7 +102,18 @@ describe "Authentication" do
           before { visit users_path }
           it { should have_selector('title', text: 'Sign in') }
         end # describe visiting the user index
-      end # describe in the Users controller
+
+        describe "visiting the following page" do
+          before { visit following_user_path(user) }
+          it { should have_selector('title', text: 'Sign in') }
+        end
+
+        describe "visiting the followers page" do
+          before { visit followers_user_path(user) }
+          it { should have_selector('title', text: 'Sign in') }
+        end
+
+    end # describe in the Users controller
     
     end # describe for non-signed-in users
 
