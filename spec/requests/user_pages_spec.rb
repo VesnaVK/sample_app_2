@@ -45,7 +45,8 @@ describe "User pages" do
       it { should have_content(m1.content) }
       it { should have_content(m2.content) }
       it { should have_content(user.microposts.count) }
-    end
+      it { should have_selector('a', value:"delete")}
+  end
 
     describe "follow/unfollow buttons" do
       let(:other_user) { FactoryGirl.create(:user) }
@@ -53,6 +54,11 @@ describe "User pages" do
 
       describe "following a user" do
         before { visit user_path(other_user) }
+        
+# Chapter 10 Exercise 4
+ #       describe "microposts" do
+ #          it { should_not have_selector('a', value:"delete")}
+ #       end
 
         it "should increment the followed user count" do
           expect do
@@ -94,6 +100,17 @@ describe "User pages" do
           before { click_button "Unfollow" }
           it { should have_selector('input', value: 'Follow') }
         end
+      end
+
+      describe "follower/following counts" do
+        let(:other_user) { FactoryGirl.create(:user) }
+        before do
+          other_user.follow!(user)
+          visit user_path(user)
+        end
+
+        it { should have_link("0 following", href: following_user_path(user)) }
+        it { should have_link("1 followers", href: followers_user_path(user)) }
       end
     end
 
