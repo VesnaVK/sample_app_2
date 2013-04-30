@@ -182,7 +182,7 @@ describe User do
       end
     end
 
-    
+
     it "should have the right microposts in the right order" do
       @user.microposts.should == [newer_micropost, older_micropost]
     end
@@ -216,8 +216,29 @@ describe User do
     before do
       @user.save
       @user.follow!(other_user)
+      other_user.follow!(@user)
     end
 
+    it "should destroy associated relationships" do
+      relationships = @user.relationships.dup
+      @user.destroy
+      relationships.should_not be_empty
+      relationships.each do |relationships|
+          Relationship.find_by_id(relationships.id).should be_nil
+      end
+    end
+
+
+    it "should destroy associated reverse relationships" do
+      reverse_relationships = @user.reverse_relationships.dup
+      @user.destroy
+      reverse_relationships.should_not be_empty
+      reverse_relationships.each do |reverse_relationships|
+        Relationship.find_by_id(reverse_relationships.id).should be_nil
+      end
+    end
+
+    
     it { should be_following(other_user) }
     its(:followed_users) { should include(other_user) }
 
